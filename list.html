@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYPO WEBTOON · 웹툰 목록</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar" id="topbar"></header>
+
+<div class="wrap">
+  <div class="section-title" id="listTitle">전체 웹툰</div>
+  <div class="filters" id="filters"></div>
+  <div class="toon-grid" id="listGrid"></div>
+  <div id="empty" style="display:none;text-align:center;padding:60px 0;color:var(--text-mute);font-size:15px;">
+    아직 등록된 웹툰이 없어요. <a href="upload.html" style="color:var(--blue);font-weight:700">첫 웹툰 올리기 ›</a>
+  </div>
+</div>
+
+<script src="common.js"></script>
+<script>
+  renderHeader('list');
+
+  const params = new URLSearchParams(location.search);
+  const cur = params.get('cat') || 'all';
+
+  // 필터 버튼
+  document.getElementById('filters').innerHTML = CATEGORIES.map(c=>
+    `<a href="list.html?cat=${c.id}" class="${c.id===cur?'active':''}">${c.label}</a>`
+  ).join('');
+
+  // 제목
+  document.getElementById('listTitle').textContent = CAT_LABEL[cur] || '전체 웹툰';
+
+  // 목록
+  const list = cur==='all' ? WEBTOONS : WEBTOONS.filter(w=>w.cat===cur);
+  if(list.length){
+    document.getElementById('listGrid').innerHTML = list.map(toonCard).join('');
+  } else {
+    document.getElementById('empty').style.display='block';
+  }
+</script>
+</body>
+</html>

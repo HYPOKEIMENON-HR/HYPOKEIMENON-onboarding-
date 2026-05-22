@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYPO WEBTOON · 업로드</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar" id="topbar"></header>
+
+<div class="wrap">
+  <div class="card form-card">
+    <h1>웹툰 업로드 ⬆️</h1>
+    <p class="sub">인사 안내·교육 웹툰을 등록합니다. 임직원 누구나 열람할 수 있어요.</p>
+
+    <div class="field">
+      <label>제목 <span>*</span></label>
+      <input type="text" id="title" placeholder="예) 이런 것도 직장 내 괴롭힘일까?">
+    </div>
+
+    <div class="field">
+      <label>카테고리 <span>*</span></label>
+      <select id="cat"></select>
+    </div>
+
+    <div class="field">
+      <label>담당 파트</label>
+      <select id="dept">
+        <option>인사파트</option>
+        <option>회계파트</option>
+        <option>비서·총무파트</option>
+        <option>영업지원파트</option>
+        <option>신사업T/F파트</option>
+        <option>C&C파트</option>
+        <option>영상기획파트</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>설명</label>
+      <textarea id="desc" placeholder="웹툰 내용을 간단히 소개해 주세요."></textarea>
+    </div>
+
+    <div class="field">
+      <label>웹툰 이미지 <span>*</span></label>
+      <div class="drop" id="drop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 9l5-5 5 5M12 4v12"/></svg>
+        <b>이미지를 끌어다 놓거나 클릭해서 선택</b>
+        <small>여러 컷을 순서대로 선택하면 세로로 이어집니다 (JPG, PNG)</small>
+      </div>
+      <input type="file" id="file" accept="image/*" multiple style="display:none">
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+
+    <button class="submit" id="submit">웹툰 등록하기</button>
+
+    <div class="note">
+      💡 지금은 화면 미리보기 단계예요. 실제 저장은 이미지 호스팅(Cloudinary)과
+      목록 저장(Google Apps Script / Supabase 등) 연결이 필요해요. 원하시면 그 부분도 이어서 붙여드릴게요.
+    </div>
+  </div>
+</div>
+
+<script src="common.js"></script>
+<script>
+  renderHeader('upload');
+
+  // 카테고리 옵션 (전체 제외)
+  document.getElementById('cat').innerHTML =
+    CATEGORIES.filter(c=>c.id!=='all').map(c=>`<option value="${c.id}">${c.label}</option>`).join('');
+
+  const drop=document.getElementById('drop'), file=document.getElementById('file'), thumbs=document.getElementById('thumbs');
+  drop.onclick=()=>file.click();
+  drop.ondragover=e=>{e.preventDefault();drop.style.borderColor='var(--blue)';};
+  drop.ondragleave=()=>drop.style.borderColor='';
+  drop.ondrop=e=>{e.preventDefault();drop.style.borderColor='';showThumbs(e.dataTransfer.files);};
+  file.onchange=()=>showThumbs(file.files);
+
+  function showThumbs(files){
+    thumbs.innerHTML='';
+    [...files].forEach(f=>{
+      if(!f.type.startsWith('image/'))return;
+      const img=document.createElement('img');
+      img.src=URL.createObjectURL(f);
+      thumbs.appendChild(img);
+    });
+  }
+
+  document.getElementById('submit').onclick=()=>{
+    const t=document.getElementById('title').value.trim();
+    if(!t){ alert('제목을 입력해 주세요.'); return; }
+    if(!thumbs.children.length){ alert('웹툰 이미지를 선택해 주세요.'); return; }
+    alert('등록 미리보기 완료!\n\n실제 저장 기능을 붙이면 목록에 바로 올라가게 만들 수 있어요.');
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYPO WEBTOON · 조직도</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .org-row{display:flex;gap:30px;justify-content:center;align-items:flex-start;flex-wrap:wrap;}
+  .branch{display:flex;flex-direction:column;align-items:center;}
+</style>
+</head>
+<body>
+
+<header class="topbar" id="topbar"></header>
+
+<div class="wrap">
+  <div class="section-title">조직도</div>
+
+  <div class="org-wrap">
+    <!-- 본부 -->
+    <div class="org-top">
+      <div class="org-node hq"><div class="nt">기획본부</div><div class="nd">Planning Division</div></div>
+    </div>
+    <div class="connector"></div>
+
+    <!-- 하위 조직 -->
+    <div class="org-row">
+
+      <!-- 경영관리팀 -->
+      <div class="branch">
+        <div class="org-node team"><div class="nt">경영관리팀</div></div>
+        <div class="parts">
+          <div class="part">회계파트</div>
+          <div class="part">인사파트</div>
+          <div class="part">비서·총무파트</div>
+        </div>
+      </div>
+
+      <!-- 사업운영팀 -->
+      <div class="branch">
+        <div class="org-node team"><div class="nt">사업운영팀</div></div>
+        <div class="parts">
+          <div class="part">영업지원파트</div>
+          <div class="part">신사업 T/F 파트</div>
+        </div>
+      </div>
+
+      <!-- C&C파트 -->
+      <div class="branch">
+        <div class="org-node team"><div class="nt">C&C파트</div></div>
+      </div>
+
+      <!-- 영상기획파트 -->
+      <div class="branch">
+        <div class="org-node team"><div class="nt">영상기획파트</div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="common.js"></script>
+<script>renderHeader('org');</script>
+</body>
+</html>

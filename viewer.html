@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYPO WEBTOON · 뷰어</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar" id="topbar"></header>
+
+<div class="viewer-bar">
+  <div style="max-width:680px;margin:0 auto;">
+    <a href="javascript:history.back()" style="font-size:13px;color:var(--text-mute);font-weight:600;">‹ 목록으로</a>
+    <div class="vt" id="vTitle" style="margin-top:6px">웹툰</div>
+    <div class="vm" id="vMeta"></div>
+  </div>
+</div>
+
+<div class="strip" id="strip"></div>
+
+<div class="viewer-end">
+  <p>다음 웹툰도 확인해 보세요 👀</p>
+  <a href="list.html" class="btn-up" style="display:inline-block;padding:13px 22px;border-radius:12px;">웹툰 목록으로</a>
+</div>
+
+<script src="common.js"></script>
+<script>
+  renderHeader('list');
+
+  const id = new URLSearchParams(location.search).get('id');
+  const w = getWebtoon(id) || WEBTOONS[0];
+
+  document.getElementById('vTitle').textContent = w.title;
+  document.getElementById('vMeta').textContent =
+    `${CAT_LABEL[w.cat]} · ${w.dept} · ${w.date} · 조회 ${w.views}`;
+
+  const strip = document.getElementById('strip');
+  if(w.panels && w.panels.length){
+    // 실제 이미지(Cloudinary 등)
+    strip.innerHTML = w.panels.map(src=>
+      `<div class="panel"><img src="${src}" alt=""></div>`).join('');
+  } else {
+    // 이미지 업로드 전 - 플레이스홀더 컷
+    const labels = ['도입','설명','사례','정리','마무리'];
+    strip.innerHTML = labels.map((lb,i)=>`
+      <div class="panel panel-ph" style="background:linear-gradient(160deg,${w.color},${shade(w.color,-22)})">
+        <span class="pn">${i+1}컷</span>${lb}
+      </div>`).join('') +
+      `<div style="text-align:center;color:var(--text-mute);font-size:13px;padding:24px 0;">
+        ※ 업로드한 웹툰 이미지가 이 자리에 세로로 이어집니다.
+      </div>`;
+  }
+
+  function shade(hex,p){
+    const n=parseInt(hex.slice(1),16);
+    let r=(n>>16)+p, g=((n>>8)&255)+p, b=(n&255)+p;
+    r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));
+    return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0');
+  }
+</script>
+</body>
+</html>
